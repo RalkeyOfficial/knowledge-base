@@ -1,6 +1,7 @@
 import React, {type ReactNode} from 'react';
 import Layout from '@theme/Layout';
 import Link from '@docusaurus/Link';
+import useBaseUrl from '@docusaurus/useBaseUrl';
 import styles from './index.module.css';
 
 // Categories shown as cards on the landing page. Hrefs match the `slug`
@@ -23,7 +24,7 @@ export default function Home(): ReactNode {
         <div className={styles.glow} aria-hidden="true" />
 
         <img
-          src="/img/logo.svg"
+          src={useBaseUrl('/img/logo.svg')}
           alt="Knowledge Base logo"
           className={styles.logo}
           width={140}
