@@ -30,6 +30,18 @@ There is no test runner — verification is `npm run build` (broken links throw)
 - Don't create a new taxonomy folder until ~2–3 guides need it (charter rule).
 - Admonition titles must be **bracketed** — `:::info[Title]`, not `:::info Title`. The bracket-less form is invalid directive syntax and renders as literal `:::` text instead of a styled callout.
 
+### Prose ↔ code balance
+
+Guides serve two kinds of reader at once: people who learn by **reading** the reasoning, and people who learn by **running** the commands. A good guide satisfies both — it should read well as continuous prose *and* be skimmable down to just the code blocks. Aim for that mixture rather than a wall of commands with terse one-liners between them.
+
+- **Every code block gets a prose lead-in that explains the *why*, not just the *what*.** Before a command, say what it accomplishes and why it's needed — not a restatement of the command. A reader who skips the code should still understand what that step does and a reader who skips the prose should still be able to run it.
+- **Open the guide by motivating the tool.** Early on (after the one-line summary) include a short "What is X / what can you do with it" section: what the tool is, and a scannable bullet list of concrete things people actually use it for. Interest the reader before instructing them.
+- **No section should be code-only.** If a step is just a command with no surrounding text, add a sentence or two of context. Section landing/lead-in paragraphs (Verify, Troubleshooting, each numbered step) orient the reader before the list or block that follows.
+- **Define jargon in plain language the first time it appears** (e.g. what a "port", "POT", or "plugin" is here), briefly and inline. Assume a capable reader who may not know this specific tool's vocabulary.
+- **Explain non-obvious requirements and failure modes**, especially silent ones — if getting a path or version wrong fails quietly, say so and say why.
+- **Keep the commands themselves untouched and copy-pasteable.** Expanding prose means adding context *around* code, never padding the code or making the reader hand-edit more.
+- Don't over-correct into bloat: prose should earn its place by adding understanding. Cut sentences that only restate the heading or the command.
+
 ## What this project is
 
 A personal, self-hosted knowledge base of software/tech tutorials, built on **Docusaurus (React + MDX)** and deployed as a **static site**. The differentiator over plain Markdown notes is structured navigation, full-text search, and interactive **command-generator** components that assemble exact commands (e.g. `chmod`, `yt-dlp`) instead of making readers hand-edit flags.

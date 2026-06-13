@@ -71,7 +71,11 @@ const config: Config = {
   ],
 
   themeConfig: {
-    image: 'img/docusaurus-social-card.jpg',
+    // Social card used for link embeds (Open Graph / Twitter) — e.g. Discord,
+    // Slack, X. Docusaurus turns this into an absolute og:image URL. Source SVG
+    // lives alongside it (social-card.svg); re-rasterize with:
+    //   rsvg-convert -w 1200 -h 630 static/img/social-card.svg -o static/img/social-card.png
+    image: 'img/social-card.png',
     colorMode: {
       respectPrefersColorScheme: true,
     },
