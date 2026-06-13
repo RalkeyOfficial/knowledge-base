@@ -1,0 +1,169 @@
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 5rem 1rem 6rem;
+  overflow: hidden;
+}
+
+/* Soft brand-colored glow behind the logo (kept intentionally). */
+.glow {
+  position: absolute;
+  top: -120px;
+  width: 520px;
+  height: 520px;
+  max-width: 90vw;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(123, 92, 255, 0.28) 0%,
+    rgba(79, 140, 255, 0.18) 40%,
+    transparent 70%
+  );
+  filter: blur(8px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.logo,
+.title,
+.slogan,
+.subtitle,
+.buttons,
+.grid {
+  position: relative;
+  z-index: 1;
+}
+
+.logo {
+  width: 140px;
+  height: 140px;
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.title {
+  margin: 1.5rem 0 0;
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+.accent {
+  color: var(--ifm-color-primary);
+}
+
+.slogan {
+  margin: 1rem 0 0;
+  font-size: clamp(1.15rem, 3vw, 1.6rem);
+  color: var(--ifm-color-emphasis-800);
+}
+
+.subtitle {
+  margin: 1rem auto 0;
+  max-width: 620px;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2.25rem;
+}
+
+.primaryBtn,
+.primaryBtn:hover {
+  color: #fff;
+  text-decoration: none;
+}
+
+.primaryBtn {
+  padding: 0.8rem 1.8rem;
+  border-radius: 6px;
+  font-weight: 700;
+  background: var(--ifm-color-primary);
+  transition: background 0.15s ease;
+}
+
+.primaryBtn:hover {
+  background: var(--ifm-color-primary-dark);
+}
+
+.secondaryBtn,
+.secondaryBtn:hover {
+  text-decoration: none;
+  color: var(--ifm-color-emphasis-900);
+}
+
+.secondaryBtn {
+  padding: 0.8rem 1.8rem;
+  border-radius: 6px;
+  font-weight: 700;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.secondaryBtn:hover {
+  border-color: var(--ifm-color-primary);
+  color: var(--ifm-color-primary);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  width: 100%;
+  max-width: 880px;
+  margin-top: 4rem;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  gap: 0.35rem;
+  padding: 1.25rem;
+  border-radius: 8px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  background: var(--ifm-background-surface-color);
+  text-decoration: none;
+  transition: border-color 0.15s ease;
+}
+
+.card:hover {
+  text-decoration: none;
+  border-color: var(--ifm-color-primary);
+}
+
+.cardEmoji {
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.cardTitle {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--ifm-heading-color);
+}
+
+.cardDesc {
+  font-size: 0.9rem;
+  color: var(--ifm-color-emphasis-700);
+}

@@ -1,0 +1,299 @@
+---
+title: yt-dlp setup
+description: Install yt-dlp with the bgutil POT provider in Docker, tuned config profiles, and a ydl wrapper script.
+tags: [video, cli, yt-dlp, youtube, docker]
+---
+
+import OSTabs from '@site/src/components/OSTabs';
+import TabItem from '@theme/TabItem';
+import DockerCommand from '@site/src/components/ytdlp/DockerCommand';
+import ConfigFiles from '@site/src/components/ytdlp/ConfigFiles';
+import DownloadButton from '@site/src/components/ytdlp/DownloadButton';
+
+**One-line summary:** a batteries-included `yt-dlp` install — the bgutil POT
+provider running in Docker so YouTube stops rate-limiting you, two tuned config
+profiles (video + music), and a small `ydl` wrapper so you can type
+`ydl music <url>` and be done.
+
+This is opinionated: it reflects how I run yt-dlp. Swap the bits you disagree
+with. The interactive forms below bake your choices (provider port, browser
+cookies) straight into the commands and config.
+
+## Prerequisites
+
+- **Docker** installed and running ([install docs](https://docs.docker.com/get-docker/)).
+- You're comfortable running commands in a terminal.
+
+## 1. Install yt-dlp
+
+<OSTabs>
+  <TabItem value="linux" label="Linux">
+
+    On Arch:
+
+    ```bash
+    sudo pacman -S yt-dlp
+    # or, from the AUR:
+    yay -S yt-dlp
+    ```
+
+    On other distros, install from your package manager or with
+    [pipx](https://github.com/yt-dlp/yt-dlp/wiki/Installation) (`pipx install yt-dlp`).
+
+  </TabItem>
+  <TabItem value="macos" label="macOS">
+
+    ```bash
+    brew install yt-dlp
+    ```
+
+  </TabItem>
+  <TabItem value="windows" label="Windows">
+
+    ```powershell
+    winget install yt-dlp.yt-dlp
+    ```
+
+  </TabItem>
+</OSTabs>
+
+:::note[Updating]
+When yt-dlp is installed through a package manager, updates go through that
+package manager — yt-dlp's built-in `-U` updater won't work. If you want the
+self-updater, install the binary manually instead.
+:::
+
+## 2. Run the bgutil POT provider in Docker
+
+YouTube increasingly requires a **proof-of-origin token (POT)**. The
+[bgutil provider](https://github.com/Brainicism/bgutil-ytdlp-pot-provider)
+generates these; running it in Docker keeps it isolated and always available.
+
+Pick the port you want it on (default **4416**) — this same port is reused in
+the config later, so set it once here:
+
+<DockerCommand />
+
+The container always listens on `4416` internally; the `-p <port>:4416` mapping
+exposes it on the host port you chose. yt-dlp talks to it at
+`http://127.0.0.1:<port>`.
+
+## 3. Create the config directory
+
+<OSTabs>
+  <TabItem value="linux" label="Linux">
+
+    ```bash
+    mkdir -p ~/.config/yt-dlp
+    ```
+
+  </TabItem>
+  <TabItem value="macos" label="macOS">
+
+    ```bash
+    mkdir -p ~/.config/yt-dlp
+    ```
+
+  </TabItem>
+  <TabItem value="windows" label="Windows">
+
+    ```powershell
+    mkdir $env:APPDATA\yt-dlp
+    ```
+
+  </TabItem>
+</OSTabs>
+
+## 4. Install the POT provider plugin
+
+yt-dlp needs a plugin to talk to the provider. The catch: it must land at
+`plugins/bgutil-ytdlp-pot-provider/yt_dlp_plugins/`, **not**
+`plugins/yt_dlp_plugins/` — so extract it into a named subfolder. These
+commands grab the latest release and place it correctly:
+
+<OSTabs>
+  <TabItem value="linux" label="Linux">
+
+    ```bash
+    mkdir -p ~/.config/yt-dlp/plugins/bgutil-ytdlp-pot-provider
+    curl -L https://github.com/Brainicism/bgutil-ytdlp-pot-provider/releases/latest/download/bgutil-ytdlp-pot-provider.zip -o /tmp/bgutil-pot.zip
+    unzip -o /tmp/bgutil-pot.zip -d ~/.config/yt-dlp/plugins/bgutil-ytdlp-pot-provider
+    ```
+
+  </TabItem>
+  <TabItem value="macos" label="macOS">
+
+    ```bash
+    mkdir -p ~/.config/yt-dlp/plugins/bgutil-ytdlp-pot-provider
+    curl -L https://github.com/Brainicism/bgutil-ytdlp-pot-provider/releases/latest/download/bgutil-ytdlp-pot-provider.zip -o /tmp/bgutil-pot.zip
+    unzip -o /tmp/bgutil-pot.zip -d ~/.config/yt-dlp/plugins/bgutil-ytdlp-pot-provider
+    ```
+
+  </TabItem>
+  <TabItem value="windows" label="Windows">
+
+    ```powershell
+    $dest = "$env:APPDATA\yt-dlp\plugins\bgutil-ytdlp-pot-provider"
+    New-Item -ItemType Directory -Force -Path $dest | Out-Null
+    Invoke-WebRequest -Uri "https://github.com/Brainicism/bgutil-ytdlp-pot-provider/releases/latest/download/bgutil-ytdlp-pot-provider.zip" -OutFile "$env:TEMP\bgutil-pot.zip"
+    Expand-Archive -Force -Path "$env:TEMP\bgutil-pot.zip" -DestinationPath $dest
+    ```
+
+  </TabItem>
+</OSTabs>
+
+Prefer to do it by hand? Download `bgutil-ytdlp-pot-provider.zip` from the
+[latest release](https://github.com/Brainicism/bgutil-ytdlp-pot-provider/releases/latest)
+and extract it into that `bgutil-ytdlp-pot-provider/` subfolder yourself.
+
+## 5. Create the config files
+
+Two profiles: `config` (video, the default) and `config.music` (audio-only).
+Set the port to match step 2, and pick whether to pull cookies from your
+browser — handy for age-restricted or members-only content. The files update
+live below:
+
+<ConfigFiles />
+
+Save them into your config directory:
+
+<OSTabs>
+  <TabItem value="linux" label="Linux">
+
+    `~/.config/yt-dlp/config` and `~/.config/yt-dlp/config.music`
+
+  </TabItem>
+  <TabItem value="macos" label="macOS">
+
+    `~/.config/yt-dlp/config` and `~/.config/yt-dlp/config.music`
+
+  </TabItem>
+  <TabItem value="windows" label="Windows">
+
+    `%APPDATA%\yt-dlp\config` and `%APPDATA%\yt-dlp\config.music`
+
+  </TabItem>
+</OSTabs>
+
+:::note[The configs assume Deno]
+The `--js-runtimes deno` line tells yt-dlp to solve YouTube's JS challenges with
+[Deno](https://deno.com/). Install Deno, or delete that line if you'd rather
+let yt-dlp pick whatever runtime it finds.
+:::
+
+:::info[Why two files?]
+yt-dlp only auto-loads the file literally named `config`. The second file
+(`config.music`) exists for the `ydl` wrapper in the next step, which selects a
+profile with `--config-location`. `--ignore-config` at the top of `config.music`
+stops the default `config` from being layered on top of it.
+:::
+
+## 6. Add the `ydl` wrapper script
+
+This wrapper lets you pick a profile by name (`ydl music <url>`) and falls back
+to the default config when you pass a URL directly. Save it under your config
+directory's `bin/` folder.
+
+<OSTabs>
+  <TabItem value="linux" label="Linux">
+
+    Save it as `~/.config/yt-dlp/bin/ydl`:
+
+    <DownloadButton file="yt-dlp/ydl" filename="ydl">Download ydl</DownloadButton>
+
+  </TabItem>
+  <TabItem value="macos" label="macOS">
+
+    Save it as `~/.config/yt-dlp/bin/ydl`:
+
+    <DownloadButton file="yt-dlp/ydl" filename="ydl">Download ydl</DownloadButton>
+
+  </TabItem>
+  <TabItem value="windows" label="Windows">
+
+    Save it as `%APPDATA%\yt-dlp\bin\ydl.bat`:
+
+    <DownloadButton file="yt-dlp/ydl.bat" filename="ydl.bat">Download ydl.bat</DownloadButton>
+
+  </TabItem>
+</OSTabs>
+
+### Put `ydl` on your PATH
+
+<OSTabs>
+  <TabItem value="linux" label="Linux">
+
+    Make it executable and symlink it into `~/.local/bin` (which is usually
+    already on your PATH):
+
+    ```bash
+    chmod +x ~/.config/yt-dlp/bin/ydl
+    ln -s ~/.config/yt-dlp/bin/ydl ~/.local/bin/ydl
+    ```
+
+  </TabItem>
+  <TabItem value="macos" label="macOS">
+
+    Make it executable and symlink it into `~/.local/bin` (add that directory to
+    your PATH in `~/.zshrc` if it isn't already):
+
+    ```bash
+    chmod +x ~/.config/yt-dlp/bin/ydl
+    ln -s ~/.config/yt-dlp/bin/ydl ~/.local/bin/ydl
+    ```
+
+  </TabItem>
+  <TabItem value="windows" label="Windows">
+
+    Add the `bin` folder to your user PATH (run once, then open a new terminal):
+
+    ```powershell
+    [Environment]::SetEnvironmentVariable("Path", $env:Path + ";$env:APPDATA\yt-dlp\bin", "User")
+    ```
+
+  </TabItem>
+</OSTabs>
+
+## Verify it worked
+
+1. The provider container is up:
+
+   ```bash
+   docker ps --filter name=bgutil-provider
+   ```
+
+2. `ydl` is found and prints its usage (lists your profiles):
+
+   ```bash
+   ydl
+   ```
+
+3. A real download works — `-P` sets the output directory:
+
+   ```bash
+   ydl https://www.youtube.com/watch?v=dQw4w9WgXcQ -P "~/Downloads/a custom folder/"
+   ydl music https://www.youtube.com/watch?v=dQw4w9WgXcQ -P "~/Downloads/a custom folder/"
+   ```
+
+## Troubleshooting
+
+- **`ydl: command not found`** — your PATH doesn't include the bin directory.
+  On Linux/macOS confirm `~/.local/bin` is on PATH (`echo $PATH`); on Windows
+  open a fresh terminal after the PATH command.
+- **POT / "Sign in to confirm you're not a bot" errors** — the provider isn't
+  reachable. Check `docker ps`, and make sure the port in the config's
+  `base_url` matches the host port you mapped in step 2.
+- **`deno` not found / JS runtime errors** — install [Deno](https://deno.com/),
+  or remove the `--js-runtimes deno` line from the configs.
+- **Plugin not detected** — the folder layout is wrong. You should have
+  `plugins/bgutil-ytdlp-pot-provider/yt_dlp_plugins/`, not
+  `plugins/yt_dlp_plugins/`.
+- **Cookie errors** — the selected browser must be installed and have a profile.
+  Chromium-based browsers can lock the cookie database while running; close the
+  browser if extraction fails.
+
+## References
+
+- [yt-dlp](https://github.com/yt-dlp/yt-dlp) · [configuration docs](https://github.com/yt-dlp/yt-dlp#configuration)
+- [bgutil-ytdlp-pot-provider](https://github.com/Brainicism/bgutil-ytdlp-pot-provider)
+- [Deno](https://deno.com/)

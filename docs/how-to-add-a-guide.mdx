@@ -1,0 +1,82 @@
+---
+title: How to add a guide
+description: The short version of authoring a new guide in this knowledge base.
+sidebar_position: 0
+tags: [meta]
+---
+
+import OSTabs from '@site/src/components/OSTabs';
+import TabItem from '@theme/TabItem';
+
+# How to add a guide
+
+**One-line summary:** copy the template into the right category folder, fill it
+in, and verify it builds clean.
+
+## Steps
+
+1. Pick the category folder under `docs/` that matches **what the thing is
+   for** (not the OS, not the date). Don't create a new category until ~2–3
+   guides need it.
+
+2. Copy the template into that folder and give it a kebab-case name:
+
+   ```bash
+   cp docs/_template.mdx docs/03-system-cli/my-new-guide.mdx
+   ```
+
+   Files starting with `_` (like the template) are ignored by the build, so
+   the template never shows up as a page.
+
+3. Fill in the front matter (`title`, `description`, `tags`) and each section.
+   Make every command **copy-pasteable** — no unexplained placeholders; mark
+   user values like `<your-username>`.
+
+## Cross-platform by default
+
+Guides are **cross-platform** — write the shared narrative once. Only the parts
+that genuinely differ per OS (install commands, file paths, etc.) go inside an
+`<OSTabs>` block, which keeps every switcher on the page in sync and remembers
+the reader's choice:
+
+<OSTabs>
+  <TabItem value="linux" label="Linux">
+
+    ```bash
+    sudo apt install yt-dlp
+    ```
+
+  </TabItem>
+  <TabItem value="macos" label="macOS">
+
+    ```bash
+    brew install yt-dlp
+    ```
+
+  </TabItem>
+  <TabItem value="windows" label="Windows">
+
+    ```powershell
+    winget install yt-dlp.yt-dlp
+    ```
+
+  </TabItem>
+</OSTabs>
+
+Keep the tab values `linux` / `macos` / `windows` consistent — that's the key
+the sync matches on. For commands with many flags, embed an interactive
+generator component instead of making readers hand-edit (see `src/components/`).
+
+## Verify it worked
+
+```bash
+npm run build   # must finish with zero broken-link warnings
+npm run serve   # spot-check light/dark mode and mobile width
+```
+
+## Definition of done
+
+A guide is done when every command has been **actually run on the stated
+platform(s)**, it has a troubleshooting section, it's tagged, links resolve,
+and it renders correctly in light/dark mode at desktop and mobile widths. The
+full checklist lives in `PROJECT.md` §6 in the repo root.

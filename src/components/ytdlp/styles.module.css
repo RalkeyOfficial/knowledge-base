@@ -1,0 +1,222 @@
+.generator {
+  margin: 1.25rem 0 1.75rem;
+}
+
+/* --- controls card --- */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem 1.75rem;
+  align-items: flex-end;
+  padding: 1.1rem 1.35rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 8px;
+  background: var(--ifm-background-surface-color);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+}
+
+.label {
+  font-weight: 600;
+  color: var(--ifm-color-emphasis-700);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: 0.72rem;
+}
+
+.input,
+.select {
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 6px;
+  background: var(--ifm-background-color);
+  color: var(--ifm-font-color-base);
+  font-size: 0.95rem;
+  min-width: 11rem;
+  height: 2.5rem;
+  transition: border-color 0.15s ease;
+}
+
+.input:hover,
+.select:hover {
+  border-color: var(--ifm-color-primary);
+}
+
+.input:focus,
+.select:focus {
+  border-color: var(--ifm-color-primary);
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 1px;
+}
+
+/* --- read-only synced port chip --- */
+.portChip {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  height: 2.5rem;
+  padding: 0 0.9rem;
+  border-radius: 6px;
+  border: 1px dashed var(--ifm-color-emphasis-300);
+  background: var(--ifm-color-emphasis-100);
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ifm-color-primary);
+}
+
+.portChipNote {
+  font-family: var(--ifm-font-family-base);
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--ifm-color-emphasis-600);
+}
+
+/* --- bubbly checkbox --- */
+.check {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  user-select: none;
+  font-size: 0.9rem;
+  color: var(--ifm-color-emphasis-800);
+  padding-bottom: 0.35rem;
+}
+
+.checkInput {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.checkBox {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 1.45rem;
+  height: 1.45rem;
+  border-radius: 0.6rem;
+  background: var(--ifm-background-color);
+  /* inset shadow instead of a border, so the gradient fills edge-to-edge
+     when checked (no transparent-border seam) */
+  box-shadow: inset 0 0 0 2px var(--ifm-color-emphasis-300);
+  transition: background 0.18s ease, box-shadow 0.18s ease,
+    transform 0.12s ease;
+}
+
+.checkMark {
+  width: 0.95rem;
+  height: 0.95rem;
+  transform: scale(0);
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.check:hover .checkBox {
+  box-shadow: inset 0 0 0 2px var(--ifm-color-primary);
+}
+
+.checkInput:checked ~ .checkBox {
+  background: var(--ifm-color-primary);
+  box-shadow: none;
+}
+
+.checkInput:checked ~ .checkBox .checkMark {
+  transform: scale(1);
+}
+
+.checkInput:active ~ .checkBox {
+  transform: scale(0.88);
+}
+
+.checkInput:focus-visible ~ .checkBox {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 3px;
+}
+
+.checkText code {
+  font-size: 0.82em;
+}
+
+/* --- config preview (filename header + download icon, flush to code block) --- */
+/* Mirror the code block's background. --prism-background-color is only set
+   inline on the code block itself, so a sibling header can't inherit it; we
+   re-declare it here to match the configured Prism themes (github / dracula). */
+.preview {
+  --prism-background-color: #f6f8fa;
+  margin: 1rem 0 1.25rem;
+}
+
+[data-theme='dark'] .preview {
+  --prism-background-color: #282a36;
+}
+
+.previewHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.25rem 0.5rem 0.25rem var(--ifm-pre-padding);
+  border-bottom: 1px solid var(--ifm-color-emphasis-300);
+  border-top-left-radius: var(--ifm-code-border-radius);
+  border-top-right-radius: var(--ifm-code-border-radius);
+  background: var(--prism-background-color);
+}
+
+.previewName {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: var(--ifm-code-font-size);
+  font-weight: 500;
+  color: var(--ifm-color-content);
+}
+
+.previewDownload {
+  display: inline-grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ifm-color-emphasis-700);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.previewDownload:hover {
+  background: var(--ifm-color-emphasis-300);
+  color: var(--ifm-color-emphasis-900);
+}
+
+/* flatten the code block's top so it sits flush under the header */
+.preview :global(.theme-code-block) {
+  margin-top: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+/* --- download button for static scripts --- */
+.scriptBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: 6px;
+  background: var(--ifm-color-primary);
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.scriptBtn:hover {
+  background: var(--ifm-color-primary-dark);
+  color: #fff;
+  text-decoration: none;
+}

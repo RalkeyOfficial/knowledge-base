@@ -1,0 +1,104 @@
+---
+# Copy this file into a category folder, rename it (kebab-case .mdx), and fill
+# it in. Files prefixed with "_" are ignored by the build, so this template
+# never renders as a page.
+title: "Do the thing — phrase the title as the outcome"
+description: "One-line TL;DR summary of what this guide accomplishes."
+tags: [cli, troubleshooting] # cross-cutting search tags
+---
+
+import OSTabs from '@site/src/components/OSTabs';
+import TabItem from '@theme/TabItem';
+
+**One-line summary:** the TL;DR — what you'll have working by the end.
+
+Guides are **cross-platform by default**. Write the shared narrative once; only
+the parts that genuinely differ per OS (install commands, file paths, etc.) go
+in an `<OSTabs>` block. The tabs stay in sync across the page and remember the
+reader's choice.
+
+## Prerequisites
+
+- Required tools and versions (e.g. `ffmpeg >= 6.0`)
+
+Install it:
+
+<OSTabs>
+  <TabItem value="linux" label="Linux">
+
+    ```bash
+    sudo apt install ffmpeg
+    ```
+
+  </TabItem>
+  <TabItem value="macos" label="macOS">
+
+    ```bash
+    brew install ffmpeg
+    ```
+
+  </TabItem>
+  <TabItem value="windows" label="Windows">
+
+    ```powershell
+    winget install Gyan.FFmpeg
+    ```
+
+  </TabItem>
+</OSTabs>
+
+## Steps
+
+1. A step that's the same everywhere — just a copy-pasteable command:
+
+   ```bash
+   echo "every command must be runnable as-is — no unexplained placeholders"
+   ```
+
+2. A step where the path differs per OS — use tabs only for the difference.
+   Mark user-supplied values clearly, e.g. `<your-username>`.
+
+   <OSTabs>
+     <TabItem value="linux" label="Linux">
+
+       ```bash
+       ls ~/.config/app
+       ```
+
+     </TabItem>
+     <TabItem value="macos" label="macOS">
+
+       ```bash
+       ls ~/Library/Application\ Support/app
+       ```
+
+     </TabItem>
+     <TabItem value="windows" label="Windows">
+
+       ```powershell
+       ls $env:APPDATA\app
+       ```
+
+     </TabItem>
+   </OSTabs>
+
+## Verify it worked
+
+How to confirm success — expected output, a status check, etc.
+
+```bash
+command --version
+```
+
+## Troubleshooting
+
+- **Symptom:** likely cause → fix.
+
+{/* ## Interactive generator (optional)
+    For commands with many options, embed a generator component here:
+    import ChmodGenerator from '@site/src/components/ChmodGenerator';
+    <ChmodGenerator /> */}
+
+## References
+
+- [Upstream docs](https://example.com)
