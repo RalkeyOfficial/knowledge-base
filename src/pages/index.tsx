@@ -64,6 +64,28 @@ export default function Home(): ReactNode {
             </Link>
           ))}
         </div>
+
+        <section className={styles.contribute}>
+          <h2 className={styles.contributeTitle}>Got a guide of your own? 🙌</h2>
+          <p className={styles.contributeText}>
+            Contributions are welcome — and you don&apos;t need to be an expert
+            or even know Git. Open a pull request with your guide, or just submit
+            your tutorial as an issue and we&apos;ll shape it into a page (and
+            credit you).
+          </p>
+          <div className={styles.buttons}>
+            <Link
+              className={styles.primaryBtn}
+              to="/docs/how-to-add-a-guide">
+              How to contribute
+            </Link>
+            <Link
+              className={styles.secondaryBtn}
+              to="https://github.com/RalkeyOfficial/knowledge-base/issues/new?template=tutorial-submission.yml">
+              Submit a tutorial →
+            </Link>
+          </div>
+        </section>
       </main>
     </Layout>
   );

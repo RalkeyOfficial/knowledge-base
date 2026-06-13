@@ -1,0 +1,72 @@
+name: "📝 Submit a tutorial"
+description: "Got a guide to share but don't want to wrangle Git? Write it here and we'll turn it into a page."
+title: "[Tutorial] <short outcome-oriented title>"
+labels: ["tutorial-submission"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for sharing! 🙌 You don't need to format anything perfectly or run
+        a build — just get the steps down and we'll shape it into a guide (and
+        credit you). If you'd rather open a pull request yourself, see
+        [How to add a guide](https://ralkeyofficial.github.io/knowledge-base/docs/how-to-add-a-guide).
+  - type: input
+    id: outcome
+    attributes:
+      label: What will the reader be able to do?
+      description: An outcome-oriented title — finish the sentence "After this guide, I can…".
+      placeholder: "Download a YouTube playlist as audio-only with yt-dlp"
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: Which category does it fit?
+      description: Best guess is fine — we'll sort it out.
+      options:
+        - Media & Downloading
+        - Emulation & Gaming
+        - System & CLI
+        - Networking
+        - Windows
+        - Self-hosting
+        - Not sure / something else
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Which platform(s) did you test it on?
+      multiple: true
+      options:
+        - Linux
+        - macOS
+        - Windows
+        - Cross-platform
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: The steps
+      description: The actual commands or steps, in order. Paste real commands you've run — code blocks are great but not required.
+      placeholder: |
+        1. Install yt-dlp: ...
+        2. Run: yt-dlp -x --audio-format mp3 "<playlist-url>"
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    id: gotchas
+    attributes:
+      label: Gotchas / troubleshooting (optional)
+      description: Anything that tripped you up, error messages, or prerequisites worth calling out.
+    validations:
+      required: false
+  - type: checkboxes
+    id: verified
+    attributes:
+      label: Confirmation
+      options:
+        - label: I actually ran these steps and they worked on the platform(s) I selected.
+          required: true

@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 📖 How to add a guide (pull request route)
+    url: https://ralkeyofficial.github.io/knowledge-base/docs/how-to-add-a-guide
+    about: Comfortable with Git? Here's how to add a guide and open a pull request yourself.
+  - name: 💬 Browse the knowledge base
+    url: https://ralkeyofficial.github.io/knowledge-base/
+    about: Read the existing guides before submitting a new one.

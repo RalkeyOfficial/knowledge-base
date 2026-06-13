@@ -44,12 +44,31 @@ npm run serve    # serve the production build locally to spot-check
 npm run typecheck
 ```
 
-## Adding a guide
+## Contributing — your tutorials are welcome 🙌
 
-Copy `docs/_template.mdx` into the matching category folder under `docs/` and
-fill it in. The full walkthrough is at
+Got a trick worth sharing? You don't need to be an expert, and you **don't even
+need to know Git**. There are two ways in:
+
+### 1. Open a pull request (if you're comfortable with Git)
+
+Copy `docs/_template.mdx` into the matching category folder under `docs/`, fill
+it in, run `npm run build` to check it's clean, and open a PR. The full
+walkthrough is at
 **[/docs/how-to-add-a-guide](https://ralkeyofficial.github.io/knowledge-base/docs/how-to-add-a-guide)**
-on the live site (source: `docs/how-to-add-a-guide.mdx`).
+(source: `docs/how-to-add-a-guide.mdx`).
+
+[**→ Open a pull request**](https://github.com/RalkeyOfficial/knowledge-base/compare)
+
+### 2. Submit it as an issue (no Git required)
+
+Don't want to deal with the tooling? Just
+**[open a tutorial-submission issue](https://github.com/RalkeyOfficial/knowledge-base/issues/new?template=tutorial-submission.yml)**,
+write your steps in plain text, and we'll shape it into a proper guide — and
+credit you. Found a mistake instead?
+[Open a regular issue](https://github.com/RalkeyOfficial/knowledge-base/issues/new/choose).
+
+Either way: be kind, keep it copy-pasteable, and make sure you've actually run
+the commands.
 
 ## Deployment
 

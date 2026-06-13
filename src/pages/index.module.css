@@ -32,7 +32,8 @@
 .slogan,
 .subtitle,
 .buttons,
-.grid {
+.grid,
+.contribute {
   position: relative;
   z-index: 1;
 }
@@ -166,4 +167,34 @@
 .cardDesc {
   font-size: 0.9rem;
   color: var(--ifm-color-emphasis-700);
+}
+
+.contribute {
+  width: 100%;
+  max-width: 880px;
+  margin-top: 4rem;
+  padding: 2.5rem 1.5rem;
+  border-radius: 12px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  background: var(--ifm-background-surface-color);
+}
+
+.contributeTitle {
+  margin: 0;
+  font-size: clamp(1.4rem, 4vw, 1.8rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.contributeText {
+  margin: 0.75rem auto 0;
+  max-width: 560px;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--ifm-color-emphasis-700);
+}
+
+/* The contribute section centers its own button row. */
+.contribute .buttons {
+  margin-top: 1.75rem;
 }
