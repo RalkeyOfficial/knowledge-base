@@ -14,9 +14,16 @@ const config: Config = {
     v4: true, // Improve compatibility with the upcoming Docusaurus v4
   },
 
-  // TODO: set to the real production URL once the hosting target is decided.
-  url: 'https://example.com',
-  baseUrl: '/',
+  // Hosted on GitHub Pages as a project site:
+  // https://ralkeyofficial.github.io/knowledge-base/
+  url: 'https://ralkeyofficial.github.io',
+  baseUrl: '/knowledge-base/',
+
+  // GitHub Pages deployment config (org/user + repo name).
+  organizationName: 'RalkeyOfficial',
+  projectName: 'knowledge-base',
+  // CI publishes the built site to this branch (see .github/workflows/deploy.yml).
+  deploymentBranch: 'deploy',
 
   // Broken links are a build failure for this project (see PROJECT.md DoD).
   onBrokenLinks: 'throw',
