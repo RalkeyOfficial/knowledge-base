@@ -19,12 +19,54 @@ This is opinionated: it reflects how I run yt-dlp. Swap the bits you disagree
 with. The interactive forms below bake your choices (provider port, browser
 cookies) straight into the commands and config.
 
+## What is yt-dlp?
+
+[yt-dlp](https://github.com/yt-dlp/yt-dlp) is a command-line program that
+downloads video and audio from the web. It started as a fork of `youtube-dl`
+and has since become the de-facto tool for the job — actively maintained,
+faster, and with far more features. Despite the name, it isn't limited to
+YouTube: it supports **thousands of sites** (Vimeo, Twitch, SoundCloud,
+Twitter/X, TikTok, Bandcamp, news sites, and many more).
+
+You hand it a URL and it figures out the rest. A few things it's good at:
+
+- **Grab a video in the quality you want** — best available, or capped at
+  1080p/720p, with the video and audio streams merged automatically.
+- **Rip audio only** — pull an MP3 or the original audio out of a music video
+  or podcast, no re-encoding cruft.
+- **Download whole playlists or channels** in one command, skipping anything
+  you've already fetched.
+- **Embed metadata, thumbnails, and subtitles** straight into the file so your
+  media player shows titles, cover art, and captions.
+- **Keep its own naming and folder scheme** with output templates, so
+  everything lands organized instead of as `videoplayback.mp4`.
+
+If you've ever wanted a local copy of something to watch offline, archive
+before it disappears, or listen to on a device without a browser, this is the
+tool. The rest of this guide gets you a setup that handles YouTube's
+rate-limiting and bot checks cleanly, plus a wrapper so common downloads are a
+single short command.
+
 ## Prerequisites
 
+You don't need much to get going — yt-dlp itself is a single program, and the
+extra pieces below exist to keep YouTube downloads working smoothly rather than
+because yt-dlp can't run without them.
+
 - **Docker** installed and running ([install docs](https://docs.docker.com/get-docker/)).
-- You're comfortable running commands in a terminal.
+  This hosts the POT provider from step 2. If you've never used Docker, the
+  short version is that it runs a small self-contained service in the
+  background; you set it up once and forget about it.
+- You're comfortable running commands in a terminal. Every command here is
+  copy-pasteable, so you don't need to memorize anything — but you should know
+  how to open a shell and paste into it.
 
 ## 1. Install yt-dlp
+
+yt-dlp is distributed for every major platform, so the install itself is a
+one-liner. Pick the tab for your OS. The main thing to decide is *how* you
+install it, because that determines how you'll **update** it later (more on
+that in the note below).
 
 <OSTabs>
   <TabItem value="linux" label="Linux">
@@ -65,12 +107,25 @@ self-updater, install the binary manually instead.
 
 ## 2. Run the bgutil POT provider in Docker
 
-YouTube increasingly requires a **proof-of-origin token (POT)**. The
-[bgutil provider](https://github.com/Brainicism/bgutil-ytdlp-pot-provider)
-generates these; running it in Docker keeps it isolated and always available.
+This is the step that makes the difference between yt-dlp "mostly working" and
+yt-dlp working reliably. YouTube has been tightening the screws on automated
+downloads, and increasingly requires a **proof-of-origin token (POT)** — a
+short-lived token that proves the request is coming from something that looks
+like a real browser. Without it, you'll hit "Sign in to confirm you're not a
+bot" errors and throttled, painfully slow downloads.
 
-Pick the port you want it on (default **4416**) — this same port is reused in
-the config later, so set it once here:
+Generating those tokens involves running some of YouTube's own JavaScript, which
+is fiddly to do by hand. The
+[bgutil provider](https://github.com/Brainicism/bgutil-ytdlp-pot-provider) does
+it for you: it runs as a tiny background service that yt-dlp asks for a token
+whenever it needs one. Running it **in Docker** means you don't have to install
+its dependencies on your own system, it stays isolated, and it's always
+available in the background without you thinking about it.
+
+Pick the port you want it on (default **4416**). A port is just the numbered
+"door" the service listens on; the only thing that matters is that you use the
+*same* number here and in the config later, so set it once here and the form
+below will carry it through:
 
 <DockerCommand />
 
@@ -79,6 +134,12 @@ exposes it on the host port you chose. yt-dlp talks to it at
 `http://127.0.0.1:<port>`.
 
 ## 3. Create the config directory
+
+yt-dlp looks in a standard location for its config files, plugins, and the
+wrapper script — everything from here on lives in one folder. Creating it now
+means the later steps have somewhere to write to. On Linux and macOS that's
+`~/.config/yt-dlp`; on Windows it's under `%APPDATA%`. This single command just
+makes the folder:
 
 <OSTabs>
   <TabItem value="linux" label="Linux">
@@ -106,10 +167,18 @@ exposes it on the host port you chose. yt-dlp talks to it at
 
 ## 4. Install the POT provider plugin
 
-yt-dlp needs a plugin to talk to the provider. The catch: it must land at
-`plugins/bgutil-ytdlp-pot-provider/yt_dlp_plugins/`, **not**
-`plugins/yt_dlp_plugins/` — so extract it into a named subfolder. These
-commands grab the latest release and place it correctly:
+The Docker service from step 2 generates tokens, but yt-dlp doesn't know how to
+talk to it on its own — it needs a small **plugin** that bridges the two. Think
+of the service as the engine and the plugin as the wiring that connects it to
+yt-dlp.
+
+There's one easy-to-miss catch in how yt-dlp discovers plugins. It expects each
+plugin in its own named subfolder, so the files must land at
+`plugins/bgutil-ytdlp-pot-provider/yt_dlp_plugins/`, **not** directly at
+`plugins/yt_dlp_plugins/`. Get this wrong and yt-dlp silently ignores the
+plugin — no error, it just won't work. The commands below grab the latest
+release and extract it into the correct subfolder for you, so you don't have to
+get the nesting right by hand:
 
 <OSTabs>
   <TabItem value="linux" label="Linux">
@@ -148,10 +217,24 @@ and extract it into that `bgutil-ytdlp-pot-provider/` subfolder yourself.
 
 ## 5. Create the config files
 
-Two profiles: `config` (video, the default) and `config.music` (audio-only).
-Set the port to match step 2, and pick whether to pull cookies from your
-browser — handy for age-restricted or members-only content. The files update
-live below:
+A config file is just a list of the command-line options you'd otherwise type
+every single time. Instead of remembering a long string of flags for quality,
+output naming, metadata, and the POT provider, you write them down once and
+yt-dlp applies them automatically on every run. This is where most of the
+"opinionated" part of this setup lives.
+
+We use **two profiles** because video and music want different defaults:
+
+- `config` — the default profile, tuned for downloading **video** at a sensible
+  quality with metadata and thumbnails embedded.
+- `config.music` — an **audio-only** profile that strips the video stream and
+  saves a clean audio file, for when you only want the sound.
+
+Two things to set below: the **port** must match the one you chose in step 2 (so
+yt-dlp can find the provider), and you can optionally pull **cookies** from your
+browser. Cookies let yt-dlp act as your logged-in self, which is what makes
+age-restricted, private, or members-only content downloadable. The files update
+live as you change the options:
 
 <ConfigFiles />
 
@@ -190,9 +273,16 @@ stops the default `config` from being layered on top of it.
 
 ## 6. Add the `ydl` wrapper script
 
-This wrapper lets you pick a profile by name (`ydl music <url>`) and falls back
-to the default config when you pass a URL directly. Save it under your config
-directory's `bin/` folder.
+Here's the friction the two-profile setup introduces: yt-dlp only auto-loads the
+file named `config`, so to use the music profile you'd have to type out
+`yt-dlp --config-location ~/.config/yt-dlp/config.music <url>` every time. That's
+exactly the kind of thing you'll never remember.
+
+The `ydl` wrapper is a tiny script that hides that. You type `ydl music <url>`
+and it picks the music profile for you; pass a URL on its own and it falls back
+to the default video config. It's pure convenience — nothing here changes what
+yt-dlp can do, it just makes the common cases short and memorable. Save it under
+your config directory's `bin/` folder:
 
 <OSTabs>
   <TabItem value="linux" label="Linux">
@@ -256,6 +346,11 @@ directory's `bin/` folder.
 
 ## Verify it worked
 
+With everything in place, it's worth confirming each piece is wired up before
+you rely on it. These three checks walk from the bottom up: is the provider
+running, does the wrapper resolve on your PATH, and does an actual download
+succeed end-to-end. If all three pass, you're done.
+
 1. The provider container is up:
 
    ```bash
@@ -276,6 +371,11 @@ directory's `bin/` folder.
    ```
 
 ## Troubleshooting
+
+Most problems with this setup come down to one of a few things: a path that
+isn't where yt-dlp expects, a port mismatch between the provider and the config,
+or a missing dependency. Here are the ones you're most likely to hit and how to
+fix each:
 
 - **`ydl: command not found`** — your PATH doesn't include the bin directory.
   On Linux/macOS confirm `~/.local/bin` is on PATH (`echo $PATH`); on Windows
