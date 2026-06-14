@@ -1,0 +1,453 @@
+---
+title: Set up Eden — Nintendo Switch emulator
+description: Beginner-friendly guide to installing Eden — a picker finds the right download for your device, then drag-and-drop steps install it (Linux via Gear Lever, Windows from a zip, macOS from a DMG).
+tags: [emulation, switch, eden, gear-lever, appimage, cross-platform]
+---
+
+import OSTabs from '@site/src/components/OSTabs';
+import TabItem from '@theme/TabItem';
+import BuildPicker from '@site/src/components/eden/BuildPicker';
+
+**One-line summary:** get Eden installed and ready to open — answer two clicks
+to find the exact download for your device, then follow the drag-and-drop steps
+for your system (Linux gets one-click updates through Gear Lever).
+
+This guide covers **getting Eden installed and running**. Configuring it (keys,
+games, graphics settings) comes in a later section.
+
+You don't need to be technical to follow this. There are no commands to
+memorize — where a command is needed, you can copy and paste it exactly as
+shown, and the rest is clicking and dragging files.
+
+## What is Eden?
+
+[Eden](https://eden-emu.dev/) is an open-source **Nintendo Switch emulator** — a
+program that runs Switch software on your PC. It's a continuation of the
+lineage of earlier Switch emulators, and it's distributed as a self-contained
+download you point at your own games rather than something you install from an
+app store.
+
+A few things to know up front:
+
+- **There are several versions to download.** Eden offers a few different
+  downloads, each tuned for a different kind of computer (a normal PC, a Steam
+  Deck, a handheld like the ROG Ally, and so on). Don't worry about which is
+  which — the picker in step 1 asks you two simple questions and tells you
+  exactly which one to get.
+- **You bring your own games and keys.** Eden is just the emulator; it does not
+  come with any Nintendo games. Getting your games and keys onto it is covered
+  in the setup section later.
+- **On Linux it's an AppImage.** An [AppImage](https://appimage.org/) is a
+  single file that contains the whole app — there's nothing to install, you
+  just run the file. To make it feel like a normal installed app (with a menu
+  icon and an update button), we'll add it to a free helper app called **Gear
+  Lever**.
+
+## Prerequisites
+
+You'll need a 64-bit computer made in the last decade or so — almost any PC,
+laptop, Steam Deck, or gaming handheld qualifies. You **don't** need to know
+your exact processor model; the picker in step 1 figures out the right download
+from a couple of plain-English questions.
+
+Pick your system below to see if there's anything to install first:
+
+<OSTabs>
+  <TabItem value="linux" label="Linux">
+
+    On Linux we'll install Eden through **Gear Lever** — a small, free helper
+    app that takes the downloaded file and turns it into a normal installed app
+    with a menu icon and, best of all, an **update button** so you never have to
+    re-download Eden by hand.
+
+    Install Gear Lever by copying and pasting this command into a terminal:
+
+    ```bash
+    flatpak install flathub it.mijorus.gearlever
+    ```
+
+    :::note[Don't have Flatpak?]
+    The command above uses **Flatpak**, an app installer that most Linux
+    systems include. If your computer doesn't recognize the `flatpak` command,
+    install it from your system's software/package manager first, then run this
+    once to connect it to the Flathub app store:
+
+    ```bash
+    flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    ```
+    :::
+
+  </TabItem>
+  <TabItem value="macos" label="macOS">
+
+    Nothing to install first — on a Mac, Eden comes as a `.dmg` file that you
+    open and drag into your Applications folder, just like most Mac apps.
+
+    :::caution[Mac support is experimental]
+    The Mac version is still experimental — expect **graphical glitches and
+    crashes**. If you also have a Windows PC or a Linux machine, Eden will run
+    much more smoothly there.
+    :::
+
+  </TabItem>
+  <TabItem value="windows" label="Windows">
+
+    Nothing to install first — on Windows, Eden comes as a `.zip` file that you
+    unzip and run. Windows can open zip files on its own, so you don't need any
+    extra software (though [7-Zip](https://www.7-zip.org/) works too if you
+    prefer it).
+
+  </TabItem>
+</OSTabs>
+
+## 1. Find your download
+
+Eden offers a few different downloads, and grabbing the right one matters — the
+wrong one can run slowly, crash, or not start at all. Instead of making you read
+through hardware charts, the picker below does it for you. **Click your system,
+then click the option that best describes your device**, and it'll tell you the
+exact file to download and hand you a link to the downloads page.
+
+<BuildPicker />
+
+:::tip[What's "PGO"?]
+You'll see most downloads come in a **Standard** and a **PGO** version. PGO is
+just a faster, more optimized version of the same thing — always try it first.
+The only reason to pick Standard is if the PGO one ever misbehaves. The picker
+already points you at the right one.
+:::
+
+If you'd rather choose for yourself — or you're just curious what all the
+options are — the full list is here:
+
+<details>
+<summary>See every download and exactly who it's for</summary>
+
+Every option also comes in a **Standard** and a **PGO** version (except where
+noted); prefer **PGO** unless it misbehaves, then fall back to **Standard**.
+
+<OSTabs>
+  <TabItem value="linux" label="Linux">
+
+Linux builds are AppImages.
+
+| Build | Use it if… |
+| --- | --- |
+| **amd64** | Generic x86-64 — the default choice for most desktops/laptops. |
+| **Legacy amd64** | Pre-Ryzen / pre-Haswell CPUs. Older hardware; **expect bugs**. |
+| **Steam Deck** | Steam Deck (Zen 2). |
+| **Zen 4** | AMD Z1/Z2 handhelds — ROG Ally X, Legion Go S. |
+| **ARM (aarch64)** | 64-bit ARM machines. |
+
+  </TabItem>
+  <TabItem value="macos" label="macOS">
+
+There's a single option: **macOS DMG**. (See the experimental warning in
+Prerequisites.)
+
+  </TabItem>
+  <TabItem value="windows" label="Windows">
+
+Windows builds come as zips.
+
+| Build | Use it if… | Versions |
+| --- | --- | --- |
+| **amd64/x86_64 (MSVC)** | You hit **graphical issues** on the other builds (e.g. Pokémon Scarlet & Violet). The compatibility fallback. | MSVC zip only — **no PGO** |
+| **amd64/x86_64 v3** (MinGW) | Ryzen, 4th-gen Intel, or newer — the default for most modern PCs. | Standard + PGO |
+| **Zen 4** | Zen 4 or newer (ROG Ally X, Legion Go S). **Not compatible with Intel.** | Standard + PGO |
+| **aarch64/arm64** | Snapdragon (ARM) devices. | Standard + PGO |
+
+  </TabItem>
+</OSTabs>
+
+</details>
+
+Once you've downloaded the file (it lands in your **Downloads** folder by
+default), come back here and continue to step 2.
+
+## 2. Install it
+
+Now that you've got the download, let's turn it into an app you can open. The
+steps are different for each system, so pick your tab.
+
+<OSTabs>
+  <TabItem value="linux" label="Linux">
+
+    We'll add the downloaded file to **Gear Lever** (the helper you installed
+    earlier). Gear Lever tucks Eden away neatly, gives it a menu icon, and lets
+    you update it later with a single button — no re-downloading by hand.
+
+    1. **Open Gear Lever.** You'll find it in your applications menu, the same
+       place your other apps live.
+
+    2. **Open your file manager and find the Eden file you just downloaded.**
+       It's in your **Downloads** folder and its name ends in `.AppImage`.
+
+    3. **Drag that file from your file manager onto the Gear Lever window**, and
+       let go. Gear Lever will show you the app, ready to add.
+
+       :::note[If a button looks locked or greyed out]
+       Look for an **unlock** button in the top-right corner and click it — that
+       gives Gear Lever permission to set the file up. (Depending on your
+       system you may not see this at all, which is fine.)
+       :::
+
+    4. **Click the button to add / install the app.** That's it — Eden now
+       appears in your applications menu like any other program, and you can
+       launch it from there.
+
+    To double-check that future updates will work: click Eden inside Gear Lever
+    and scroll down to the **Update Management** section. As long as the
+    **Update URL** box has a web address filled in, you're set — that's how Gear
+    Lever knows where to look for new versions. It'll say *no updates available*
+    until Eden actually releases a newer one, which is exactly what you want to
+    see right now.
+
+  </TabItem>
+  <TabItem value="macos" label="macOS">
+
+    1. **Double-click the downloaded `.dmg` file** to open it. A small window
+       pops up showing the Eden app.
+    2. **Drag the Eden icon onto the Applications folder** shown in that window.
+       Then you can close the window and eject the disk image (drag it to the
+       Trash or click the eject arrow next to it).
+    3. **Open Eden from your Applications folder.** The first time, macOS will
+       likely block it because it's not from the App Store. To allow it, go to
+        menu → **System Settings → Privacy & Security**, scroll to the
+       **Security** section, and click **Allow** (sometimes worded **Allow
+       untrusted app**). Then open Eden again and it'll start.
+
+  </TabItem>
+  <TabItem value="windows" label="Windows">
+
+    There's no installer on Windows — you just unzip the download and run the
+    program inside.
+
+    1. **Find the `.zip` file you downloaded** (it's in your **Downloads**
+       folder). **Right-click it → Extract All…**, and choose a permanent home
+       for it, such as a new folder called `Eden` in your Documents. Avoid
+       leaving it inside Downloads, since you might clear that folder later.
+
+       :::caution[Don't run Eden from inside the zip]
+       If you double-click into the zip and run Eden without extracting first,
+       it may fail or behave oddly. Always **Extract All** to a real folder
+       first.
+       :::
+
+    2. **Open the folder you extracted to and double-click `eden.exe`** to start
+       Eden.
+    3. The first time, Windows may show a blue **"Windows protected your PC"**
+       box. This is normal for apps it hasn't seen before — click **More info**,
+       then **Run anyway**.
+
+    :::note[Updating later on Windows]
+    The Windows version doesn't update itself. When a new version comes out,
+    download the new zip and extract it over the same folder, replacing the old
+    files.
+    :::
+
+  </TabItem>
+</OSTabs>
+
+Open Eden for the first time. You should see its main window with an **empty
+list of games** — that's exactly right at this stage, because we haven't added
+keys or games yet. As long as the window opens and doesn't immediately crash,
+the download you picked is correct and you're ready to set it up.
+
+## 3. Add your keys and firmware
+
+Switch games are encrypted, so Eden needs two things before it can run anything:
+a set of **keys** (a small file called `prod.keys` that unlocks the games) and
+the Switch **firmware** (the console's system software). Eden ships with
+neither, because they're Nintendo's property — on a real setup you dump them
+from a Switch you own.
+
+:::danger[The keys and firmware versions must match]
+This is the single most important rule in this section: your **`prod.keys` and
+your firmware have to be the same version as each other**. A mismatch is the
+most common reason installs fail or games refuse to boot. If you grab one, grab
+the matching version of the other.
+:::
+
+1. **Download the keys.** Go to the
+   [prod.keys download page](https://prodkeys.io/prod-keys-download/) and scroll
+   down a little until you reach the **table** of versions. Pick a version and
+   download it — and note exactly which version number it is, because the
+   firmware has to match it.
+
+2. **Download the matching firmware.** Go to the
+   [firmware download page](https://prodkeys.io/switch-firmware-download/),
+   scroll down a little, and use the **download button** to grab the **same
+   version** you just picked for the keys.
+
+3. **Unzip the keys, but leave the firmware zipped.** The keys come in a zip —
+   extract it so you end up with the raw files inside: `prod.keys` and
+   `title.keys`. You can **delete `title.keys`**; Eden doesn't need it here.
+   Keep `prod.keys`. **Do not unzip the firmware** — Eden wants the firmware as
+   the `.zip` file exactly as you downloaded it.
+
+4. **Install the keys in Eden.** In Eden's top menu, click **Tools → Install
+   Decryption Keys**, then select your `prod.keys` file.
+
+5. **Install the firmware in Eden.** Again from the top menu, click **Tools →
+   Install Firmware → From ZIP**, then select the firmware **zip** file.
+
+Both should finish **without any error**. If you get an error here, it's almost
+always a version mismatch — re-check that the keys and firmware are the same
+version (see the warning above) and try again.
+
+## 4. Organize your game files
+
+Before you download a single game, set up a tidy folder structure — this isn't
+optional housekeeping, it's required. Eden treats **base games** and their
+**updates/DLC** differently, and **they cannot live in the same folder**. If you
+mix them, Eden won't pick them up correctly.
+
+Create a structure like this somewhere convenient (`ROOT_DIR` is just a folder
+of your choosing, e.g. in your Documents):
+
+```text
+ROOT_DIR/
+└── GameFiles/
+    ├── games/                     ← base game files only
+    │   └── Mario Kart 8 Deluxe/
+    │       └── game-file.nsp
+    └── DLC & Updates/             ← updates and DLC only
+        └── Mario Kart 8 Deluxe/
+            ├── update-file.nsp
+            └── dlc-file.nsp
+```
+
+The key idea: the **one base game file** goes under `games/`, and **everything
+else for that game** (its update and any DLC) goes under `DLC & Updates/`. Using
+a per-game subfolder inside each (like `Mario Kart 8 Deluxe/`) keeps things
+readable once you have a few titles.
+
+## 5. Download your games (safely)
+
+Game-download sites are heavy with ads and fake buttons, so a little caution
+goes a long way.
+
+:::caution[Install an ad blocker first]
+Before visiting any download site, install an ad blocker — **[uBlock
+Origin](https://ublockorigin.com/)** is the recommended one. It hides the pop-ups these sites are covered in, so you click the real link instead of malware.
+:::
+
+:::danger[Real Switch games are only `.nsp` or `.xci` files]
+Genuine Switch game files **only** ever come as **`.nsp`** or **`.xci`**. If a
+"game" downloads as a `.exe`, `.msi`, or anything that asks you to run an
+installer, it is **malware** — delete it immediately. No real game needs you to
+run a program to install it.
+:::
+
+A good source is **[nswpedia.com](https://nswpedia.com/)**. For example, Mario
+Kart 8 Deluxe lives at its
+[nswpedia page](https://nswpedia.com/nintendo-switch-roms/racing/mario-kart-8-deluxe-nsp-67).
+
+As you download, **sort the files into the folders from step 4 right away**: the
+single base game file goes into `games/`, and any update or DLC files go into
+`DLC & Updates/`. Getting this right now saves you confusion later.
+
+## 6. Add your games to Eden
+
+With your files sorted, point Eden at them. There are **two** folders to add —
+one for games, one for updates/DLC — and it matters that you pick the right one
+each time.
+
+1. **Add the games folder.** In Eden's main window, click the big **add game
+   directory** button in the middle of the screen, and select your
+   **`ROOT_DIR/GameFiles/games`** folder.
+
+   :::warning[Pick `games`, not `GameFiles`]
+   Select the inner **`games`** folder specifically — **not** the parent
+   `GameFiles` folder. If you point Eden at `GameFiles`, it'll sweep up your
+   updates and DLC as if they were games and things will misbehave.
+   :::
+
+2. **Add the updates/DLC folder.** From the top menu, click **Emulation →
+   Configure**. Find the **External Content** section, click **Add Directory**,
+   and select your **`ROOT_DIR/GameFiles/DLC & Updates`** folder. Save.
+
+Your game should now appear in Eden's list, with its update and DLC applied
+automatically.
+
+## 7. Set your profile name (optional)
+
+By default your in-game profile is just called **Eden**, and some games show it —
+Mario Kart, for instance, uses it as your player name. To change it, go to
+**Emulation → Configure**, and in the popup open **System → Profiles**.
+**Right-click your profile** and choose to edit it, then set the name you want.
+
+:::caution[Profiles hold your save data]
+Game progress (saves) is stored **per profile**, so if you delete a profile its
+save data goes with it. Renaming is safe; deleting is not.
+:::
+
+## 8. Set up your controller (recommended)
+
+Make sure your controller is **plugged in or connected** first, then go to
+**Emulation → Configure** and open the **Controls** section. By default no
+controller is selected, so **pick your controller** from the list — most of the
+remaining settings are fine left at their defaults.
+
+Two things are worth changing or checking before you play:
+
+- **Fix the face buttons.** Look at the **Face Buttons** group in the top-right.
+  By default Eden has **X/Y and A/B swapped** compared to where your fingers
+  expect them, which feels wrong in most games. Remap them so they match your
+  controller's physical layout.
+- **Keep console mode on "Docked".** At the bottom-left, make sure **console
+  mode** is set to **Docked**. It's the default, but it's worth confirming you
+  haven't changed it — docked mode gives better image quality and performance
+  than handheld mode.
+
+## Verify it worked
+
+Back on Eden's main screen you should now see your game in the list (with its
+box art once it loads). **Double-click it to launch.** If the game boots and
+reaches its title screen, everything is set up correctly — keys, firmware, and
+folders are all working together. You're ready to play.
+
+## Troubleshooting
+
+- **Eden won't start, or it crashes the moment you open it (Linux or
+  Windows):** you most likely have the wrong download for your device. Go back
+  to the picker in step 1 and try a safer choice — on Linux the plain **amd64**
+  download (or **Legacy amd64** if your PC is quite old), and on Windows the
+  **amd64/x86_64 (MSVC)** download, which is the most compatible one.
+- **A game looks glitchy on Windows (for example Pokémon Scarlet & Violet):**
+  switch to the **amd64/x86_64 (MSVC)** download — it exists specifically to fix
+  graphics problems the other versions sometimes have.
+- **You downloaded the PGO version and it's acting up:** download the
+  **Standard** version of the same option instead. They install the exact same
+  way.
+- **Linux — Gear Lever's Update URL box is empty:** remove Eden from Gear Lever
+  and add the file again. If it's still empty, you may have downloaded from the
+  wrong place — get the file straight from the official downloads page using the
+  picker above.
+- **Mac — "Eden can't be opened" or "unidentified developer":** this is macOS
+  being cautious. Open  menu → **System Settings → Privacy & Security**, scroll
+  to **Security**, click **Allow**, then open Eden again.
+- **Installing keys or firmware fails with an error:** almost always a version
+  mismatch. Make sure your `prod.keys` and firmware are the **same version** and
+  re-install both. Also confirm you picked the unzipped **`prod.keys`** file for
+  the keys, and the still-zipped **`.zip`** for the firmware.
+- **Your game doesn't show up in Eden's list:** check it's a `.nsp` or `.xci`
+  file sitting in the **`games`** folder (not `GameFiles`, and not the
+  `DLC & Updates` folder), then in Eden refresh/reload the games list.
+- **The game shows up but updates or DLC aren't applied:** the update/DLC files
+  need to be in the **`DLC & Updates`** folder that you added under **Emulation
+  → Configure → External Content** — not in the `games` folder.
+- **A game won't boot or crashes at the title screen:** double-check keys and
+  firmware installed without error (version match again), and that you grabbed a
+  real `.nsp`/`.xci` rather than a fake file.
+
+## References
+
+- [Eden releases page](https://git.eden-emu.dev/eden-emu/eden/releases)
+- [Eden website](https://eden-emu.dev/)
+- [Gear Lever (Flathub)](https://flathub.org/apps/it.mijorus.gearlever)
+- [What is an AppImage?](https://appimage.org/)
+- [prod.keys download](https://prodkeys.io/prod-keys-download/) · [Switch firmware download](https://prodkeys.io/switch-firmware-download/)
+- [uBlock Origin (ad blocker)](https://ublockorigin.com/)
+- [nswpedia (game files)](https://nswpedia.com/)

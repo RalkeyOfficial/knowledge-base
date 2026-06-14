@@ -1,0 +1,183 @@
+.picker {
+  margin: 1.5rem 0 2rem;
+  padding: 1.35rem 1.5rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 10px;
+  background: var(--ifm-background-surface-color);
+}
+
+.step + .step {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.question {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0 0 0.9rem;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.stepNum {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  background: var(--ifm-color-primary);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+/* --- OS row: equal-width segmented buttons --- */
+.options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+.option {
+  flex: 1 1 7rem;
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 8px;
+  background: var(--ifm-background-color);
+  color: var(--ifm-font-color-base);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease,
+    transform 0.1s ease;
+}
+
+.option:hover {
+  border-color: var(--ifm-color-primary);
+}
+
+/* --- device list: stacked, roomier buttons with a hint line --- */
+.optionsColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.deviceOption {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 8px;
+  background: var(--ifm-background-color);
+  color: var(--ifm-font-color-base);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.deviceOption:hover {
+  border-color: var(--ifm-color-primary);
+}
+
+.deviceLabel {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.deviceHint {
+  font-size: 0.82rem;
+  color: var(--ifm-color-emphasis-600);
+}
+
+/* --- selected state (shared) --- */
+.optionActive,
+.optionActive:hover {
+  border-color: var(--ifm-color-primary);
+  background: var(--ifm-color-primary);
+  color: #fff;
+}
+
+.optionActive .deviceLabel,
+.optionActive .deviceHint {
+  color: #fff;
+}
+
+.option:active {
+  transform: scale(0.97);
+}
+
+/* --- result card --- */
+.result {
+  margin-top: 1.5rem;
+  padding: 1.25rem 1.4rem;
+  border: 1px solid var(--ifm-color-primary);
+  border-radius: 10px;
+  background: var(--ifm-color-primary-contrast-background);
+}
+
+.resultLead {
+  margin: 0 0 0.3rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.resultBuild {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin: 0 0 0.6rem;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--ifm-color-primary);
+}
+
+.resultFlavor {
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  background: var(--ifm-color-primary);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.resultNote {
+  margin: 0 0 1rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--ifm-color-emphasis-800);
+}
+
+.resultBtn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  background: var(--ifm-color-primary);
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.resultBtn:hover {
+  background: var(--ifm-color-primary-dark);
+  color: #fff;
+  text-decoration: none;
+}
+
+.resultHint {
+  margin: 0.85rem 0 0;
+  font-size: 0.9rem;
+  color: var(--ifm-color-emphasis-700);
+}
