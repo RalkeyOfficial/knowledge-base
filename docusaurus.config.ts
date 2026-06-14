@@ -92,6 +92,12 @@ const config: Config = {
           position: 'left',
           label: 'Guides',
         },
+        {
+          href: 'https://github.com/RalkeyOfficial/knowledge-base',
+          position: 'right',
+          className: 'header-github-link',
+          'aria-label': 'GitHub repository',
+        },
       ],
     },
     footer: {
