@@ -1,0 +1,443 @@
+---
+title: Set up the XXMI Launcher to mod games
+description: Install the XXMI Launcher and its model importers to run mods in HoYoverse games and Wuthering Waves — a primarily-Linux guide (Proton on Steam and on the HoyoPlay launcher via Heroic), worked through with ZZZ and Wuthering Waves and applicable to the other supported games.
+tags: [gaming, modding, xxmi, proton, steam, hoyoplay, linux]
+---
+
+import OSTabs from '@site/src/components/OSTabs';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+**One-line summary:** get the XXMI Launcher installed and injecting mods into
+the game of your choice, whether you launch it through **Steam** or through the
+**HoyoPlay launcher** (run with Heroic on Linux).
+
+This guide is **written primarily for Linux**, where getting mods to inject
+under Proton is the fiddly part — Windows is comparatively painless and is
+covered in shorter notes where it differs. The flow is the **same for every
+game XXMI supports**; we work it through with **Zenless Zone Zero** and
+**Wuthering Waves** because those are the two verified here, and call out the
+small per-game differences (mainly Wuthering Waves) as we go.
+
+## What is XXMI?
+
+[XXMI Launcher](https://github.com/SpectrumQT/XXMI-Launcher) is an open-source
+**modding platform** for HoYoverse games and Wuthering Waves. A
+**model importer** is the piece that actually loads your mods into a running
+game by hooking its graphics — XXMI bundles one importer per game under a single
+launcher, so you install and update them all from one place:
+
+| Importer | Game |
+| --- | --- |
+| **GIMI** | Genshin Impact |
+| **SRMI** | Honkai: Star Rail |
+| **ZZMI** | Zenless Zone Zero |
+| **WWMI** | Wuthering Waves |
+| **HIMI** | Honkai Impact 3rd |
+| **EFMI** | Endfield |
+
+What XXMI does for you:
+
+- **Downloads and auto-updates** the right importer for each game.
+- **Injects the mod loader** (`d3d11.dll`) when the game launches, so the game
+  itself loads your mods.
+- **Acts as a drop-in launcher** — you point your existing launcher (Steam,
+  Heroic) at XXMI instead of the game, and XXMI starts the game for you with
+  mods active.
+
+The rest of this guide is about wiring that last point up correctly on Linux,
+which is where most people get stuck.
+
+:::danger[Modding online games carries a ban risk]
+These are live online games. Mods like XXMI are widely used and generally
+considered low-risk because they only alter what *you* see locally, but there is
+**no official guarantee** — you use them at your own risk. On Linux, **which
+Proton build you choose also carries a ban risk** — see the warning under
+Prerequisites before you play.
+:::
+
+## Prerequisites
+
+- **The game already installed** — through Steam, or through the HoyoPlay
+  launcher in a folder you know the path to. (Installing the games themselves is
+  a separate guide.)
+- **XXMI Launcher** — we download it in step 1.
+
+<OSTabs>
+  <TabItem value="linux" label="Linux">
+
+    You need a recent Proton build — **GE-Proton** or **DW-Proton 11.0-5 or
+    newer**. These games are picky about Proton, so being able to switch versions
+    quickly is worth it.
+
+    :::danger[Choose your Proton build with ban risk in mind]
+    There are warnings circulating that using a Proton version **other than
+    Proton-GE or Proton-Cachy** carries a chance of being banned. The author has
+    **not** been banned using DW-Proton, but treat this as unverified — **prefer
+    Proton-GE or Proton-Cachy** wherever a build works for you, and only reach for
+    others (like DW-Proton) if those don't.
+    :::
+
+    The easiest way to install and manage Proton versions is
+    **[ProtonPlus](https://flathub.org/apps/com.vysp3r.ProtonPlus)** from
+    Flathub — it installs custom Proton builds into the right place for both
+    Steam and Heroic to find them:
+
+    ```bash
+    flatpak install flathub com.vysp3r.ProtonPlus
+    ```
+
+    :::note[Don't have Flatpak?]
+    Install it from your distro's package manager first, then connect it to
+    Flathub:
+
+    ```bash
+    flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    ```
+    :::
+
+    For the **HoyoPlay-via-Heroic** route you'll also want
+    **[Heroic Games Launcher](https://flathub.org/apps/com.heroicgameslauncher.hgl)**
+    installed. For the **Steam** route, the regular Steam client is all you need.
+
+  </TabItem>
+  <TabItem value="windows" label="Windows">
+
+    Nothing extra to install up front. If you use the **portable** build of XXMI
+    (step 1) you'll need the **Visual C++ Redistributable** — most gaming PCs
+    already have it, and the installer build pulls it in for you, so on Windows
+    the installer is the simplest path.
+
+  </TabItem>
+</OSTabs>
+
+## 1. Install XXMI
+
+Grab XXMI from the
+[releases page](https://github.com/SpectrumQT/XXMI-Launcher/releases). There are
+two builds and which one you want depends on your OS.
+
+<OSTabs>
+  <TabItem value="linux" label="Linux">
+
+    **Download the portable version** (the `.zip`, not the `.msi`). On Linux the
+    portable build is **required** — the Windows installer expects system
+    integration that doesn't exist under Proton/Wine.
+
+    1. **Extract it somewhere permanent** that you'll remember the path to (not
+       your Downloads folder, which you might clear later). The portable build
+       **auto-updates itself**, so once it's set up you never have to re-download
+       it by hand.
+
+    2. **Rename the extracted folder to exactly `XXMI Launcher`.** It unzips with
+       a versioned name like `XXMI-Launcher-Portable-vX.X.X`, but every path in
+       this guide — and the launch options later — expect a folder named
+       `XXMI Launcher`. Rename it now and the rest just works:
+
+       ```bash
+       mv "XXMI-Launcher-Portable-vX.X.X" "XXMI Launcher"
+       ```
+
+    :::caution[Get this name exactly right]
+    The folder must be `XXMI Launcher` — capital `X`s, a normal space, no version
+    suffix — because paths like `XXMI Launcher/Resources/Bin/` depend on it. A
+    single extra space, or a wrong capital letter, breaks injection silently and
+    is genuinely painful to debug. Rename **only this top folder**; leave
+    everything inside it (`Resources`, `Bin`, …) exactly as it came.
+    :::
+
+  </TabItem>
+  <TabItem value="windows" label="Windows">
+
+    **Download the installer** (`XXMI-Launcher-Installer-Online-vX.X.X.msi`) and
+    run it. Choose **Quick Installation** for the default location
+    (`%AppData%\XXMI Launcher`) or **Custom Installation** to pick your own
+    folder. When it finishes, the XXMI Launcher window opens on its own.
+
+    The portable `.zip` also works on Windows if you prefer it (extract it
+    outside `Program Files` and install the Visual C++ Redistributable first),
+    but the installer is the path of least resistance here.
+
+  </TabItem>
+</OSTabs>
+
+## 2. Start XXMI
+
+<OSTabs>
+  <TabItem value="linux" label="Linux">
+
+    For the portable build, the executable lives at:
+
+    ```text
+    XXMI Launcher/Resources/Bin/XXMI Launcher.exe
+    ```
+
+    **Run that `.exe` under Wine** — we just need its window to open so we can
+    configure the importer. The Steam and Heroic wiring that makes it launch
+    *the game* comes in step 5.
+
+  </TabItem>
+  <TabItem value="windows" label="Windows">
+
+    The installer launches XXMI for you when it's done. If you used the portable
+    build, run `XXMI Launcher/Resources/Bin/XXMI Launcher.exe`.
+
+  </TabItem>
+</OSTabs>
+
+## 3. Set up the model importer (and the GitHub-token workaround)
+
+In the XXMI window, **select your game** and start its **importer** download
+(for Zenless Zone Zero that's **ZZMI**; for Wuthering Waves, **WWMI**).
+
+It's very common for this download to **fail or stall** — XXMI pulls files from
+GitHub, and GitHub rate-limits anonymous requests, so you'll often hit a wall.
+The fix is to give XXMI a GitHub token (a personal access key that raises the
+rate limit). You need a free GitHub account for this.
+
+1. Click the **cogwheel** (top-right) to open settings, then go to the
+   **Launcher** tab.
+
+2. In the **GitHub token** field, click **Create**. That sends you to GitHub to
+   make a **classic** personal access token.
+
+3. Create the token with the **`public_repo`** scope enabled. Set the expiration
+   to whatever you like — a longer expiry just means you won't have to redo this
+   as soon.
+
+4. **Copy the token** and paste it into the **GitHub Token** field in XXMI.
+
+   :::caution[Copy the token immediately]
+   GitHub only shows a token **once**. If you navigate away before copying it,
+   you'll have to delete it and generate a new one.
+   :::
+
+5. **Retry the importer download.** With the token in place it should now
+   complete.
+
+## 4. Point the importer at your game folder
+
+XXMI needs to know where the game is installed so it can inject into it. Open
+the cogwheel settings again, stay on the **General** tab, and **browse to your
+game folder**. The folder XXMI wants is the one that directly contains the
+**game's main executable** — pick the wrong level and injection won't find the
+game. For Zenless Zone Zero that's the folder holding **`ZenlessZoneZero.exe`**.
+
+Where that folder is depends on how you installed the game:
+
+<Tabs groupId="game-source">
+  <TabItem value="steam" label="Steam">
+
+    Under your Steam library. For Zenless Zone Zero, for example:
+
+    ```text
+    [steam games folder]/SteamLibrary/steamapps/common/Zenless Zone Zero/games/ZenlessZoneZero Game/
+    ```
+
+    (`[steam games folder]` is wherever your Steam library lives — by default
+    `~/.steam/steam` or `~/.local/share/Steam` on Linux, but it may be on
+    another drive if you set up a separate library.) Other games sit under their
+    own `common/<Game Name>/` folder in the same way.
+
+  </TabItem>
+  <TabItem value="hoyoplay" label="HoyoPlay launcher">
+
+    If you installed via the HoyoPlay launcher into a custom location, it's just
+    the game's folder inside it. For Zenless Zone Zero:
+
+    ```text
+    [install location]/ZenlessZoneZero Game/
+    ```
+
+    For example, on the author's machine that's
+    `/mnt/Gaming/Gacha/ZenlessZoneZero Game/`.
+
+  </TabItem>
+</Tabs>
+
+## 5. Make the game actually launch (Linux)
+
+If you press **Play** now, it fails with an error like:
+
+```text
+ZZMI Loading Failed
+Library {your XXMI folder}/XXMI Launcher/ZZMI/d3d11.dll is missing expected entry point
+```
+
+This happens because the mod loader (`d3d11.dll`) has to sit **next to the
+game** and be loaded *with* it, but XXMI lives in its own folder. The fix is to
+put XXMI inside the game folder and tell your launcher to start XXMI instead of
+the game. The exact steps differ a little by game and launcher.
+
+:::note[On Windows this step is unnecessary]
+The native XXMI install handles injection itself — just press **Play** in the
+XXMI window. The rest of this step is the Linux-under-Proton fix.
+:::
+
+Pick **which game** you're modding, then **how you launch it** — the steps are
+tailored to each.
+
+<Tabs groupId="modded-game">
+  <TabItem value="zzz" label="Zenless Zone Zero">
+
+    <Tabs groupId="game-source">
+      <TabItem value="steam" label="Steam">
+
+        **1. Put XXMI in the game folder.** Move or symlink your `XXMI Launcher`
+        folder into the game's install folder, `common/Zenless Zone Zero/`. A
+        **symbolic link** keeps a single copy and is tidiest, but there are
+        reports of symlinks causing injection to fail — if it doesn't work,
+        **move the folder in** instead. To create a symlink (adjust both paths to
+        yours):
+
+        ```bash
+        ln -s "/path/to/XXMI Launcher" "/path/to/SteamLibrary/steamapps/common/Zenless Zone Zero/XXMI Launcher"
+        ```
+
+        **2. Set the Steam launch options.** Right-click the game in Steam →
+        **Properties → Launch Options**, and paste:
+
+        ```text
+        cmd=(%command%); cmd[-1]="$PWD/XXMI Launcher/Resources/Bin/XXMI Launcher.exe"; "${cmd[@]}" #--nogui --xxmi ZZMI
+        ```
+
+        This rewrites Steam's launch command to start the XXMI launcher (sitting
+        in the game folder) instead of the game directly.
+
+        **3. Press Play.** The XXMI launcher window should appear; click its
+        **Play** button and the game should boot with mods active.
+
+        **4. Hide the launcher (once it works).** Remove the leading `#` so the
+        tail becomes `--nogui --xxmi ZZMI`. Those flags tell XXMI to skip its own
+        window and launch the importer straight away, so you go directly into the
+        game in future:
+
+        ```text
+        cmd=(%command%); cmd[-1]="$PWD/XXMI Launcher/Resources/Bin/XXMI Launcher.exe"; "${cmd[@]}" --nogui --xxmi ZZMI
+        ```
+
+      </TabItem>
+      <TabItem value="hoyoplay" label="HoyoPlay launcher (via Heroic)">
+
+        **1. Put XXMI in the game folder.** Copy or symlink your `XXMI Launcher`
+        folder into the game's folder,
+        `[install location]/ZenlessZoneZero Game/`.
+
+        **2. Point Heroic at XXMI.** In Heroic, add a game (or edit your existing
+        entry) so its executable is the XXMI launcher inside that folder:
+
+        ```text
+        [install location]/ZenlessZoneZero Game/XXMI Launcher/Resources/Bin/XXMI Launcher.exe
+        ```
+
+        **3. Set the Proton version to DW-Proton 11.0-5.** ZZZ is fussy here.
+        Under the game's settings, choose **DW-Proton 11.0-5**. If it doesn't
+        work, try other versions — for the author, **GE-Proton does not work**
+        for the HoyoPlay route, so don't be surprised if you have to experiment.
+
+        **4. Enable "Disable umu".** In the game's settings, make sure
+        **Disable umu** is turned on — the launch fails without it.
+
+        **5. Launch.** Once the game starts correctly, add the launch flags under
+        **Settings → Advanced → Game Arguments** to skip the XXMI window in
+        future:
+
+        ```text
+        --nogui --xxmi ZZMI
+        ```
+
+      </TabItem>
+    </Tabs>
+
+  </TabItem>
+  <TabItem value="wuwa" label="Wuthering Waves">
+
+    Wuthering Waves needs **two extra things** beyond the basic flow: a
+    `SteamOS=1` in the launch options, and an extra DLL copied into the game.
+
+    **1. Put XXMI in the game folder.** Move or symlink your `XXMI Launcher`
+    folder into the game's install folder, `common/Wuthering Waves/`. Prefer a
+    symlink; if injection fails, **move the folder in** instead:
+
+    ```bash
+    ln -s "/path/to/XXMI Launcher" "/path/to/SteamLibrary/steamapps/common/Wuthering Waves/XXMI Launcher"
+    ```
+
+    **2. Copy the extra DLL.** Copy `d3dcompiler_47.dll` from your `WWMI` folder
+    into the game's binary folder, next to `Client-Win64-Shipping.exe`:
+
+    ```text
+    Wuthering Waves/Client/Binaries/Win64/
+    ```
+
+    **3. Set the Steam launch options.** Right-click the game → **Properties →
+    Launch Options** and paste this — note the added `SteamOS=1` and the `WWMI`
+    importer:
+
+    ```text
+    cmd=(%command%); cmd[-1]="$PWD/XXMI Launcher/Resources/Bin/XXMI Launcher.exe"; SteamOS=1 "${cmd[@]}" #--nogui --xxmi WWMI
+    ```
+
+    **4. Press Play.** The XXMI launcher window should appear; click its **Play**
+    button and the game should boot with mods active.
+
+    **5. Hide the launcher (once it works).** Remove the leading `#` so the tail
+    becomes `--nogui --xxmi WWMI`, and you'll go straight into the game in future:
+
+    ```text
+    cmd=(%command%); cmd[-1]="$PWD/XXMI Launcher/Resources/Bin/XXMI Launcher.exe"; SteamOS=1 "${cmd[@]}" --nogui --xxmi WWMI
+    ```
+
+  </TabItem>
+</Tabs>
+
+## Verify it worked
+
+Launch the game the way you set up above. Success looks like:
+
+- The game **boots to the title screen** with no `… Loading Failed` error.
+- If you have a mod installed, its change is visible in-game; otherwise the
+  importer's on-screen overlay (toggled with the keys it shows) confirms the
+  loader is active.
+
+If you removed the `#` (Steam) or added the flags (Heroic), the game should go
+straight in **without** the XXMI window appearing.
+
+## Other games
+
+The same launcher mods every game in the table at the top — GIMI (Genshin), SRMI
+(Star Rail), HIMI (Honkai Impact), EFMI (Endfield). The loop is identical:
+select the game in XXMI, download its importer, point it at the game's folder,
+and apply the Linux launch fix from step 5 — wherever those steps say `ZZMI`,
+use that game's importer instead (e.g. `GIMI` for Genshin). They're not all
+individually verified here, so if one misbehaves, the troubleshooting below and
+a different Proton version are the first things to try.
+
+## Troubleshooting
+
+- **`… Loading Failed … d3d11.dll is missing expected entry point`:** XXMI isn't
+  being launched in place of the game. Re-check step 5 — XXMI must be inside the
+  game folder, and the launch options / Heroic executable must point at
+  `XXMI Launcher/Resources/Bin/XXMI Launcher.exe`.
+- **Importer download fails or hangs:** add a GitHub token (step 3). Anonymous
+  GitHub downloads get rate-limited.
+- **Injection fails only with a symlink (Steam):** delete the symlink and
+  **move** the `XXMI Launcher` folder into the game folder instead — some setups
+  reject the symlinked path.
+- **Game won't launch via Heroic:** confirm **Disable umu** is enabled and the
+  Proton version is **DW-Proton 11.0-5**; then try other Proton builds if needed.
+- **"It worked yesterday, broke today" / weird path errors:** check for a typo
+  in a folder name — an extra space or a wrong capital letter in `XXMI Launcher`
+  or the game path breaks injection silently.
+- **Wuthering Waves boots but mods don't load:** make sure you copied
+  `d3dcompiler_47.dll` into `Wuthering Waves/Client/Binaries/Win64/` and used the
+  `SteamOS=1` launch options.
+
+## References
+
+- [XXMI Launcher (GitHub)](https://github.com/SpectrumQT/XXMI-Launcher) ·
+  [Releases](https://github.com/SpectrumQT/XXMI-Launcher/releases)
+- [ProtonPlus (Flathub)](https://flathub.org/apps/com.vysp3r.ProtonPlus)
+- [Heroic Games Launcher (Flathub)](https://flathub.org/apps/com.heroicgameslauncher.hgl)
+- [ZZMI on GameBanana](https://gamebanana.com/tools/17467)
+- [Creating a GitHub personal access token (classic)](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)
