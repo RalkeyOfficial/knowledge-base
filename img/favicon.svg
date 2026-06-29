@@ -1,0 +1,12 @@
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Knowledge Base">
+  <defs>
+    <linearGradient id="kbFav" x1="2" y1="2" x2="38" y2="38" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#4f8cff"/>
+      <stop offset="1" stop-color="#7b5cff"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="36" height="36" rx="9" fill="url(#kbFav)"/>
+  <!-- prompt chevron + cursor, sized for small render -->
+  <path d="M12 14l7 6-7 6" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="22" y1="26" x2="29" y2="26" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+</svg>
