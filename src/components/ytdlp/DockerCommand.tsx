@@ -15,7 +15,7 @@ export default function DockerCommand(): ReactNode {
   const [restart, setRestart] = useState(true);
 
   const restartFlag = restart ? ' --restart unless-stopped' : '';
-  const command = `docker run --name bgutil-provider -d --init${restartFlag} -p ${port}:4416 brainicism/bgutil-ytdlp-pot-provider:deno --host 127.0.0.1`;
+  const command = `docker run --name bgutil-provider -d --init${restartFlag} -p ${port}:4416 brainicism/bgutil-ytdlp-pot-provider:deno`;
 
   return (
     <div className={styles.generator}>
