@@ -1,0 +1,183 @@
+---
+title: Install and run the original Minecraft Dungeons
+description: Get the 2020 Minecraft Dungeons running through the Minecraft Launcher — a normal install on Windows, but on Linux the current launcher can't run under Proton at all, so you install the older Windows Legacy Client inside a Heroic-managed Wine prefix instead.
+tags: [gaming, minecraft, minecraft-dungeons, heroic, proton, wine, linux, windows]
+---
+
+import OSTabs from '@site/src/components/OSTabs';
+import TabItem from '@theme/TabItem';
+
+**One-line summary:** get Minecraft Dungeons installed and playable through the
+Minecraft Launcher — trivial on Windows, and on Linux, working around the
+current launcher's Xbox-integration requirement by installing an older
+"Legacy" build inside a Heroic-managed Proton prefix.
+
+:::note[Not the upcoming sequel]
+This guide covers the **original 2020 Minecraft Dungeons** — the isometric
+dungeon-crawler. A second Minecraft Dungeons is in development but isn't
+covered here; nothing below applies to it.
+:::
+
+## What is Minecraft Dungeons?
+
+Minecraft Dungeons is a standalone **dungeon-crawler / action-RPG** set in the
+Minecraft universe — closer to Diablo than to normal Minecraft. It's a separate
+purchase from Minecraft itself, launched through Mojang's **Minecraft
+Launcher** rather than any client you might already have installed.
+
+What people actually use it for:
+
+- **Co-op runs** with up to three friends, locally or online, including
+  cross-platform play with Xbox, PlayStation, Switch, and mobile.
+- **Loot-driven progression** — gear drops and unique artifacts, rather than
+  Minecraft's usual building/survival mechanics.
+- **Paid DLC campaigns** (Camp Cavern, the Arch-Illager story missions, etc.)
+  that extend the base game if you own them.
+
+## Prerequisites
+
+- **Minecraft Dungeons purchased** and linked to the Microsoft/Minecraft
+  account you'll log into.
+
+<OSTabs>
+  <TabItem value="linux" label="Linux">
+
+    You'll use **[Heroic Games
+    Launcher](https://flathub.org/apps/com.heroicgameslauncher.hgl)** here —
+    not to manage a store, but as a general-purpose **Wine/Proton prefix
+    manager**. It can add any Windows executable as a "game" with its own
+    isolated Wine prefix and Proton version, which is exactly what running the
+    Windows-only Minecraft Launcher needs.
+
+    ```bash
+    flatpak install flathub com.heroicgameslauncher.hgl
+    ```
+
+    :::note[Don't have Flatpak?]
+    Install it from your distro's package manager first, then connect it to
+    Flathub:
+
+    ```bash
+    flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    ```
+    :::
+
+    You don't need to install a Proton build separately first — Heroic can
+    download Proton/GE-Proton versions itself when you add the game in step 1.
+
+  </TabItem>
+  <TabItem value="windows" label="Windows">
+
+    Nothing to prepare — the regular Minecraft Launcher does everything for
+    you.
+
+  </TabItem>
+</OSTabs>
+
+## 1. Install the Minecraft Launcher
+
+<OSTabs>
+  <TabItem value="windows" label="Windows">
+
+    Go to [minecraft.net's download
+    page](https://www.minecraft.net/en-us/download) and grab the normal
+    installer. Run it, log into your Microsoft account, and once the launcher
+    opens, select **Minecraft Dungeons** from the game list on the left and
+    click **Play** — it downloads and installs itself with no further setup.
+
+  </TabItem>
+  <TabItem value="linux" label="Linux">
+
+    On Linux the **current** Minecraft Launcher won't work here: Microsoft's
+    newer builds pull in Xbox account-integration libraries that Proton/Wine
+    simply can't provide, so the game is impossible to install. The fix is the
+    **Windows Legacy Client** — an older build of the launcher that doesn't
+    carry that dependency and installs cleanly under Proton.
+
+    :::caution[The Legacy Client can't run everything]
+    Dropping the Xbox integration means the Legacy Client also can't launch
+    **Minecraft Legends** or **Bedrock Edition**. That's fine for Dungeons (and
+    Java Edition), which don't need it — just don't expect this install to
+    cover those other games.
+    :::
+
+    1. **Download the Windows Legacy Client** from the [alternate versions
+       page](https://www.minecraft.net/en-us/download#alternate-versions) (or
+       the [direct download
+       link](https://aka.ms/minecraftClientWindows)).
+
+    2. **In Heroic, click "Add Game".** Give it a title (e.g.
+       `MinecraftLauncher`). Under its **Wine settings**, set:
+       - **Wine Prefix:** `/home/<username>/Games/Heroic/Prefixes/MinecraftLauncher`
+       - **Wine/Proton Version:** `GE-Proton10-34` (or the newest GE-Proton
+         build Heroic offers you — an exact version match isn't required)
+
+       Using a **dedicated prefix** keeps this install isolated from any other
+       Wine/Proton apps you run through Heroic, so nothing else on your system
+       can interfere with it.
+
+    3. **Don't select an executable yet.** Instead, click **Run Installer
+       First** and point it at the Legacy Client file you downloaded in step 1.
+       You can leave the install location at its default. Walk through the
+       installer and **log into your Microsoft account** when it asks. Once you
+       reach the Minecraft Launcher's main menu inside the Wine window, the
+       install is done and you can continue.
+
+    4. **Point Heroic directly at the launcher executable.** Back in
+       Heroic — you should still be inside the `MinecraftLauncher` entry you
+       created — set the **Executable** path to:
+
+       ```text
+       /home/<username>/Games/Heroic/Prefixes/MinecraftLauncher/drive_c/Program Files (x86)/Minecraft Launcher/MinecraftLauncher.exe
+       ```
+
+       This just gives you a direct shortcut to the Minecraft Launcher from
+       Heroic's library, skipping the installer wizard on future launches.
+
+    5. **Click Finish.** You're done — Heroic now launches straight into the
+       Minecraft Launcher.
+
+  </TabItem>
+</OSTabs>
+
+## 2. Launch Minecraft Dungeons
+
+Whichever platform you're on, the game itself is launched the same way from
+here: open the Minecraft Launcher (via Heroic on Linux, or from your Start
+Menu/Desktop on Windows), select **Minecraft Dungeons** from the list on the
+left, and click **Play**. The first launch downloads the game itself, which can
+take a while depending on your connection.
+
+## Verify it worked
+
+Once the download finishes, Minecraft Dungeons should boot to its title screen
+and let you create or select a character. If you get that far without a crash,
+the Proton/Wine setup (on Linux) is working correctly — everything past this
+point is just playing the game.
+
+## Troubleshooting
+
+- **The current Minecraft Launcher won't install, or fails silently, under
+  Proton (Linux):** this is expected — use the **Windows Legacy Client** from
+  step 1 instead of the regular download; the modern build needs
+  Xbox-integration libraries Proton can't supply.
+- **You also want Minecraft Legends or Bedrock Edition:** the Legacy Client
+  can't run either — that's a deliberate trade-off for dropping the Xbox
+  dependency, not a bug. Those need the modern launcher.
+- **Heroic's "Add Game" doesn't offer "Run Installer First":** make sure you
+  haven't already set an Executable path on that entry — Heroic only offers to
+  run an installer first when no executable is selected yet.
+- **Login screen looks blank or frozen inside the Wine window:** try a
+  different (usually newer) GE-Proton build from Heroic's version list —
+  Microsoft's login page is one of the more finicky things to render under
+  Wine, and a different Proton build often resolves it.
+- **Wrong paths after copy-pasting the prefix/executable paths:** remember to
+  swap `<username>` for your actual Linux username in both — they're written as
+  literal placeholders, not real folders.
+
+## References
+
+- [Minecraft Launcher — alternate versions
+  (Legacy Client)](https://www.minecraft.net/en-us/download#alternate-versions)
+- [Windows Legacy Client — direct download](https://aka.ms/minecraftClientWindows)
+- [Heroic Games Launcher (Flathub)](https://flathub.org/apps/com.heroicgameslauncher.hgl)

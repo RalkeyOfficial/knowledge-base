@@ -333,6 +333,20 @@ Before visiting any download site, install an ad blocker — **[uBlock
 Origin](https://ublockorigin.com/)** is the recommended one. It hides the pop-ups these sites are covered in, so you click the real link instead of malware.
 :::
 
+:::info[Chrome Web Store shows it as unavailable? Here's the direct listing]
+Chrome's store sometimes shows uBlock Origin's listing with an "unavailable"
+banner instead of an install button. The extension itself is fine — you can go
+straight to its listing and re-enable the button yourself:
+
+- [uBlock Origin (Chrome Web Store)](https://chromewebstore.google.com/detail/ublock-origin/cjpalhdlnbpafiamejdnhcphjbkeiagm)
+- [uBlock Origin — development build](https://chromewebstore.google.com/detail/ublock-origin-development/cgbcahbpdhpcegmbfconppldiemgcoii)
+
+If the page says the extension "isn't available" and the install button is
+greyed out, **right-click the button → Inspect**, find the `disabled`
+attribute on it in the DevTools panel that opens, and delete that attribute.
+The button becomes clickable immediately and installs normally.
+:::
+
 :::danger[Real Switch games are only `.nsp` or `.xci` files]
 Genuine Switch game files **only** ever come as **`.nsp`** or **`.xci`**. If a
 "game" downloads as a `.exe`, `.msi`, or anything that asks you to run an
