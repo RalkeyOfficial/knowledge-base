@@ -1,0 +1,45 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Knowledge Base social card">
+  <defs>
+    <linearGradient id="kbGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#4f8cff"/>
+      <stop offset="1" stop-color="#7b5cff"/>
+    </linearGradient>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0c1322"/>
+      <stop offset="1" stop-color="#161d33"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.22" cy="0.42" r="0.55">
+      <stop stop-color="#4f8cff" stop-opacity="0.30"/>
+      <stop offset="1" stop-color="#4f8cff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- background -->
+  <rect width="1200" height="630" fill="url(#bgGrad)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <!-- top accent bar -->
+  <rect width="1200" height="8" fill="url(#kbGrad)"/>
+
+  <!-- logo badge, scaled up from the 40x40 source -->
+  <g transform="translate(96,196) scale(6)">
+    <rect x="3" y="3" width="34" height="34" rx="9" fill="url(#kbGrad)"/>
+    <path d="M11 12.5c3-1.6 6.2-1.6 9 0v17c-2.8-1.6-6-1.6-9 0v-17Z" fill="#ffffff" fill-opacity="0.20"/>
+    <path d="M20 12.5c2.8-1.6 6-1.6 9 0v17c-2.8-1.6-6.2-1.6-9 0v-17Z" fill="#ffffff" fill-opacity="0.34"/>
+    <line x1="20" y1="12.5" x2="20" y2="29.5" stroke="#ffffff" stroke-opacity="0.55" stroke-width="1.2"/>
+    <path d="M13.6 19.3l3.1 2.5-3.1 2.5" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="18.4" y1="24.6" x2="22.4" y2="24.6" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+  </g>
+
+  <!-- text block -->
+  <text x="412" y="285" font-family="DejaVu Sans, sans-serif" font-size="74" font-weight="bold" fill="#ffffff">Knowledge Base</text>
+  <text x="414" y="346" font-family="DejaVu Sans, sans-serif" font-size="27" fill="#aab4c8">Tutorials and guides for software and handy tech things</text>
+
+  <!-- terminal accent reinforcing the CLI theme (tool-agnostic) -->
+  <g transform="translate(414,408)">
+    <text x="0" y="34" font-family="DejaVu Sans Mono, monospace" font-size="30" fill="#7b5cff">$</text>
+    <rect x="40" y="11" width="17" height="29" rx="2" fill="#c7d0e0"/>
+  </g>
+
+  <!-- domain footer -->
+  <text x="414" y="522" font-family="DejaVu Sans Mono, monospace" font-size="26" fill="#6b7589">ralkeyofficial.github.io/knowledge-base</text>
+</svg>
