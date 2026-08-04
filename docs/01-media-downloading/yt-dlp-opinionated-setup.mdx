@@ -391,9 +391,20 @@ fix each:
 - **Cookie errors** — the selected browser must be installed and have a profile.
   Chromium-based browsers can lock the cookie database while running; close the
   browser if extraction fails.
+- **`ERROR: Postprocessing: Conversion failed!`** — the download itself finished,
+  but the merge/convert step at the end failed. One possible culprit is cookies:
+  passing them changes which API clients yt-dlp uses, and some of those hand back
+  stream variants that don't survive postprocessing. If you have cookies enabled,
+  comment the line out by putting a `#` in front of `--cookies-from-browser` in
+  the config and run the download again.
+
+If none of those cover your problem, yt-dlp has an official Discord — join it and
+ask in the **`#yt-dlp-help`** channel. The maintainers and regulars there can tell
+you whether an error is a site change, a bug, or something in your own config:
+[discord.gg/H5MNcFW63r](https://discord.gg/H5MNcFW63r).
 
 ## References
 
-- [yt-dlp](https://github.com/yt-dlp/yt-dlp) · [configuration docs](https://github.com/yt-dlp/yt-dlp#configuration)
+- [yt-dlp](https://github.com/yt-dlp/yt-dlp) · [configuration docs](https://github.com/yt-dlp/yt-dlp#configuration) · [Discord](https://discord.gg/H5MNcFW63r)
 - [bgutil-ytdlp-pot-provider](https://github.com/Brainicism/bgutil-ytdlp-pot-provider)
 - [Deno](https://deno.com/)
